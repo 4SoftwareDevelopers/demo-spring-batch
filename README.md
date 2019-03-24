@@ -7,7 +7,7 @@ Después de mucho tiempo por fin hemos cumplido con lo prometido traemos un ejem
 <b>https://youtu.be/5SW_lsPzNr0</b><br>
 
 <br>
-<b><a href="https://goo.gl/v2Oej4">#VamosPorLos1000</a><b>
+<b><a href="https://goo.gl/v2Oej4" target="_blank">#VamosPorLos1000</a><b>
 <br>
 Facebook : https://goo.gl/xhoMZM<br>
 Twitter: https://goo.gl/YhHtCL<br>
