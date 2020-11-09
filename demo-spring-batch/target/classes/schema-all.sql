@@ -1,8 +1,8 @@
-DROP TABLE persona IF EXISTS;
+DROP TABLE person IF EXISTS;
 
-CREATE TABLE persona(
+CREATE TABLE person(
   id BIGINT IDENTITY NOT NULL PRIMARY KEY,
-  primer_nombre VARCHAR(20),
-  segundo_nombre VARCHAR(20),
-  telefono VARCHAR(10)
+  first_name VARCHAR(20),
+  second_name VARCHAR(20),
+  phone VARCHAR(10)
 );
