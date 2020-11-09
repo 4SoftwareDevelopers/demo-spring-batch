@@ -20,63 +20,59 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
 import com.example.demospringbatch.listener.JobListener;
-import com.example.demospringbatch.model.Persona;
-import com.example.demospringbatch.processor.PersonaItemProcessor;
+import com.example.demospringbatch.model.Person;
+import com.example.demospringbatch.processor.PersonItemProcessor;
 
 @Configuration
 @EnableBatchProcessing
 public class BatchConfiguration {
-	
+
 	@Autowired
 	public JobBuilderFactory jobBuilderFactory;
-	
+
 	@Autowired
 	public StepBuilderFactory stepBuilderFactory;
-	
+
 	@Bean
-	public FlatFileItemReader<Persona> reader(){
-		return new FlatFileItemReaderBuilder<Persona>()
-			   .name("personaItemReader")
-			   .resource(new ClassPathResource("sample-data.csv"))
-			   .delimited()
-			   .names(new String[] {"primerNombre", "segundoNombre", "telefono"})
-			   .fieldSetMapper(new BeanWrapperFieldSetMapper<Persona>() {{
-				   setTargetType(Persona.class);
-			   }})
-			   .build();
+	public FlatFileItemReader<Person> reader() {
+		return new FlatFileItemReaderBuilder<Person>().name("personItemReader")
+				.resource(new ClassPathResource("sample-data.csv")).delimited()
+				.names(new String[] { "firstName", "secondName", "phone" })
+				.fieldSetMapper(new BeanWrapperFieldSetMapper<Person>() {
+					{
+						setTargetType(Person.class);
+					}
+				}).build();
 	}
-	
+
 	@Bean
-	public PersonaItemProcessor processor() {
-		return new PersonaItemProcessor();
+	public PersonItemProcessor processor() {
+		return new PersonItemProcessor();
 	}
-	
+
 	@Bean
-	public JdbcBatchItemWriter<Persona> writer(DataSource dataSource){
-		return new JdbcBatchItemWriterBuilder<Persona>()
+	public JdbcBatchItemWriter<Person> writer(DataSource dataSource) {
+		return new JdbcBatchItemWriterBuilder<Person>()
 				.itemSqlParameterSourceProvider(new BeanPropertyItemSqlParameterSourceProvider<>())
-				.sql("INSERT INTO persona (primer_nombre, segundo_nombre, telefono) VALUES (:primerNombre, :segundoNombre, :telefono)")
-				.dataSource(dataSource)
-				.build();
+				.sql("INSERT INTO person (first_name, second_name, phone) VALUES (:firstName, :secondName, :phone)")
+				.dataSource(dataSource).build();
 	}
-	
+
 	@Bean
 	public Job importPersonaJob(JobListener listener, Step step1) {
-		return jobBuilderFactory.get("importPersonaJob")
+		return jobBuilderFactory.get("importPersonJob")
 				.incrementer(new RunIdIncrementer())
 				.listener(listener)
-				.flow(step1)
-				.end()
-				.build();
+				.flow(step1).end().build();
 	}
-	
+
 	@Bean
-	public Step step1(JdbcBatchItemWriter<Persona> writer) {
+	public Step step1(JdbcBatchItemWriter<Person> writer) {
 		return stepBuilderFactory.get("step1")
-				.<Persona, Persona> chunk(10)
+				.<Person, Person>chunk(10)
 				.reader(reader())
-				.writer(writer)
-				.build();
+				.processor(processor())
+				.writer(writer).build();
 	}
 
 }

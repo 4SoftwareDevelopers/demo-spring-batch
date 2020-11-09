@@ -1,26 +1,25 @@
 package com.example.demospringbatch.processor;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.batch.item.ItemProcessor;
 
-import com.example.demospringbatch.model.Persona;
+import com.example.demospringbatch.model.Person;
 
-public class PersonaItemProcessor implements ItemProcessor<Persona, Persona> {
+import lombok.extern.log4j.Log4j2;
+
+@Log4j2
+public class PersonItemProcessor implements ItemProcessor<Person, Person> {
 	
-	private static final Logger LOG = LoggerFactory.getLogger(PersonaItemProcessor.class);
-
 	@Override
-	public Persona process(Persona item) throws Exception {
-		String primerNombre = item.getPrimerNombre().toUpperCase();
-		String segundoNombre = item.getSegundoNombre().toUpperCase();
-		String telefono = item.getTelefono();
+	public Person process(Person item) throws Exception {
+		String firstName = item.getFirstName().toUpperCase();
+		String secondName = item.getSecondName().toUpperCase();
+		String phone = item.getPhone();
 		
-		Persona persona = new Persona(primerNombre, segundoNombre, telefono);
+		Person person = new Person(firstName, secondName, phone);
 		
-		LOG.info("Convirtiendo ("+item+") a ("+persona+")");
+		log.info("Changing ("+item+") a ("+person+")");
 		
-		return persona;
+		return person;
 	}
 
 }
